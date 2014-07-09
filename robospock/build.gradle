@@ -74,8 +74,12 @@ signing {
     sign configurations.archives
 }
 
-def uploadUsername = project.hasProperty('sonatypeUsername') ? project['sonatypeUsername'] : ''
-def uploadPassword = project.hasProperty('sonatypePassword') ? project['sonatypePassword'] : ''
+ext {
+    uploadUsername = project.hasProperty('sonatypeUsername') ? project['sonatypeUsername'] : ''
+    uploadPassword = project.hasProperty('sonatypePassword') ? project['sonatypePassword'] : ''
+    releaseRepository = project.hasProperty('releaseRepository') ? project['releaseRepository'] : ''
+    snapshotRepository = project.hasProperty('snapshotRepository') ? project['snapshotRepository'] : ''
+}
 
 uploadArchives {
     repositories.mavenDeployer {
@@ -85,11 +89,11 @@ uploadArchives {
             }
         }
 
-        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots') {
+        snapshotRepository(url: snapshotRepository) {
             authentication(userName: uploadUsername, password: uploadPassword)
         }
 
-        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+        repository(url: releaseRepository) {
             authentication(userName: uploadUsername, password: uploadPassword)
         }
 
